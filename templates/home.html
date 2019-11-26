@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <title>House Price Estimation</title>
+</head>
+
+<body>
+
+    <div class="card text-center text-white mx-auto bg-info mb-3" style="max-width: 75%;">
+
+        <div class="card-body">
+            <h5 class="card-title">House Price Estimation</h5>
+            <p class="card-text">
+                <form action="http://localhost:5000" method="POST">
+                    <div class="form-row align-item-center">
+                        <div class="form-group col-md-4">
+                            <label for="city-select">Location</label>
+                            <br>
+                            <select class="custom-select custom-select-md" name="city" id="city-select"
+                                aria-placeholder="Municipality">
+                                <option value="Jakarta Utara" selected>North Jakarta</option>
+                                <option value="Jakarta Timur">East Jakarta</option>
+                                <option value="Jakarta Selatan">South Jakarta</option>
+                                <option value="Jakarta Barat">West Jakarta</option>
+                                <option value="Jakarta Pusat">Central Jakarta</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="certificate-select">Certificate</label>
+                            <br>
+                            <select class="custom-select custom-select-md" name="Sertifikat" id="certificate-select">
+                                <option value="SHM">Sertifikat Hak Milik</option>
+                                <option value="HGB" selected>Hak Guna Bangunan</option>
+                                <option value="HP">Hak Pakai</option>
+                                <option value="Lainnya">Lainnya (PJB, Girik, Adat, dsb)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row align-item-center">
+                        <div class="col-md-4">
+                            <label for="building-area">Building Area</label>
+                            <br>
+                            <input type="number" name="building_area" id="building-area" min=0
+                                placeholder="Building Area (meter square)" class="form-control"
+                                value="{{ request.form['building_area'] }}" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="building-area">Land Area</label>
+                            <br>
+                            <input type="number" name="land_area" id="land-area" min=0
+                                placeholder="Land Area (meter square)" class="form-control"
+                                value="{{ request.form['land_area'] }}" required />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row align-item-center">
+                        <div class="col-md-4">
+                            <label for="building-area">Number of Floors</label>
+                            <br>
+                            <input type="number" name="Jumlah Lantai" id="floors" min=1 placeholder="Floors"
+                                class="form-control" value="{{ request.form['Jumlah Lantai'] }}" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="building-area">Number of Bedroom</label>
+                            <br>
+                            <input type="number" name="Bedroom" id="bedroom" min=0 placeholder="Bedroom"
+                                class="form-control" value="{{ request.form['Bedroom'] }}" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="building-area">Number of Bathroom</label>
+                            <br>
+                            <input type="number" name="Bathroom" id="bathroom" min=0 placeholder="Bathroom"
+                                class="form-control" value="{{ request.form['Bathroom'] }}" required />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row align-item-center">
+                        <div class="col-md-4">
+                            <label for="condition-select">House Condition</label>
+                            <br>
+                            <select name="Kondisi Properti" id="condition-select"
+                                class="custom-select custom-select-md">
+                                <option value="Baru" selected>New</option>
+                                <option value="Bagus Sekali">Very Good</option>
+                                <option value="Bagus">Good</option>
+                                <option value="Sudah Renovasi">Renovated</option>
+                                <option value="Butuh Renovasi">Need Renovation</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="furnishing-select">Furnishing</label>
+                            <br>
+                            <select name="Dilengkapi Perabotan" id="furnishing-select"
+                                class="custom-select custom-select-md">
+                                <option value="Unfurnished" selected>Unfurnished</option>
+                                <option value="Semi Furnished">Semi Furnished</option>
+                                <option value="Furnished">Full Furnished</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-1">
+                            <label for="submit">Predict?</label>
+                            <br>
+                            <input type="submit" value="OK" class="btn btn-secondary" />
+                        </div>
+                    </div>
+                </form>
+            </p>
+        </div>
+    </div>
+    <div class="card-deck text-left mx-auto mb-3" style="max-width: 75%;">
+        <div class="card bg-light ">
+            <div class=" card-body">
+                <h5 class="card-title">Your house specification</h5>
+                <ul>
+                    {% for data in input_ %}
+                    <li><b>Location : </b>{{data['city']}}</li>
+                    <li><b>Building/Land Area (m<sup>2</sup>) : </b>{{data['building_area']}}/{{data['land_area']}}</li>
+                    <li><b>Bedroom : </b>{{data['Bedroom']}}</li>
+                    <li><b>Bathroom : </b>{{data['Bathroom']}}</li>
+                    <li><b>Floors : </b>{{data['Jumlah Lantai']}}</li>
+                    <li><b>Certificate : </b>{{data['Sertifikat']}}</li>
+                    <li><b>Furnishing : </b>{{data['Dilengkapi Perabotan']}}</li>
+                    <li><b>House Condition : </b>{{data['Kondisi Properti']}}</li>
+                    {% endfor %}
+                </ul>
+                <h5 class="card-title">Your house price estimation is <b><u> {{ result }}</u></b></h5>
+            </div>
+        </div>
+        <div class="card bg-light">
+            <div class=" card-body">
+                <h5 class="card-title" text-left>Similar Houses</h5>
+                <small>Lowest Price: {{lowest}} | Highest Price: {{highest}}</small>
+                <br>
+                {% for house in similar_house %}
+                <a href="{{ house[2] }}">{{ house[2] }}</a>
+                <ul><small>
+                        <li>Building/Land Area: {{ house[0] }}/{{ house[1] }} (m<sup>2</sup>)</li>
+                        <li>Price: {{ "Rp{0:,}".format(house[-1]) }}</li>
+                    </small>
+                </ul>
+                </li>
+                </ul>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+
+</html>
