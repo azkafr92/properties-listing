@@ -6,10 +6,13 @@ pd.options.display.float_format = '{:,}'.format
 
 
 app = Flask(__name__, template_folder='templates')
+
+# reference dataset
 house = pd.read_csv('house.csv').drop(['Unnamed: 0'], axis=1)
+
+# loading model
 kreg = joblib.load('kreg.pkl')
 pca = joblib.load('pca.pkl')
-
 
 @app.route('/')
 def home():
@@ -27,10 +30,10 @@ def result():
         test = pd.DataFrame(test)
         test = mapper(test)
         test = test.loc[:, cols]
-
+        
         similar_house_index = kreg.kneighbors(
             pca.transform(test.drop(['city'], axis=1)), n_neighbors=5)[1].tolist()[0]
-
+        
         similar_house = house.loc[similar_house_index, [
             'building_area', 'land_area', 'url', 'price']]
 

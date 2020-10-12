@@ -1,7 +1,7 @@
 *.ipynb
 *.zip
-rumah123DatabaseBuilder.py
-rumah123Scraper.py
 .vscode
 .ipynb_checkpoints
 *.sqlite3
+rumah123/*
+rumah123_json/*
